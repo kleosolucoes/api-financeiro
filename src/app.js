@@ -4,6 +4,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import cors from 'cors'
 import indexRoute from './routes/index.route'
 import usuarioRoute from './routes/usuario.route'
 import situacaoRoute from './routes/situacao.route'
@@ -20,6 +21,7 @@ mongoose.Promise = global.Promise
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
+app.use(cors())
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(bodyParser.json())
