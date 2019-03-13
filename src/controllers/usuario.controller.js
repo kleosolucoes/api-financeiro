@@ -54,6 +54,7 @@ exports.login = (req, res) => {
 			objetoDeRetorno.resultado = {
 				token,
 				usuario_id: elemento.id,
+				empresa_id: elemento.empresa_id,
 			}
 			res.json(objetoDeRetorno)
 		})
