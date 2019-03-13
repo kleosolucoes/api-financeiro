@@ -10,11 +10,15 @@ import {
 
 exports.teste = (req, res) => {
 	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
 	const passwordString = 123
 	bcrypt.hash(passwordString, null, null, (err, hashPassword) => {
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
 			hash: hashPassword,
+			foo: 'bar',
 		}
 		res.json(objetoDeRetorno)
 	})
