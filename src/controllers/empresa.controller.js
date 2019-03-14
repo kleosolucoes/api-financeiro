@@ -171,7 +171,7 @@ exports.lancarUm = (req, res) => {
 			hora_inativacao: null,
 			situacao_id: SITUACAO_NAO_RECEBIDO,
 			lancamento_id: lancamento._id,
-			usuario_id: lancamento.usuario_id,
+			usuario_id: req.body.usuario_id,
 		}
 		const novoLancamentoSituacao = new LancamentoSituacao(elementoAssociativo)
 
