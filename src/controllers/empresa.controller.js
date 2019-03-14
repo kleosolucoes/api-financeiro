@@ -320,19 +320,21 @@ exports.alterarLancamento = (req, res) => {
 					}
 					const novoLancamentoSituacao = new LancamentoSituacao(elementoAssociativo)
 
-					novoLancamentoSituacao.save((err, lancamentoSituacao) => {
+					novoLancamentoSituacao.save((err, lancamentoSituacaoNovo) => {
 						if(err){
 							objetoDeRetorno.menssagem = 'Erro ao salvar lançamento situacao' 
 							return res.json(objetoDeRetorno)
 						}
-						if(lancamentoSituacao === null){
+						if(lancamentoSituacaoNovo === null){
 							objetoDeRetorno.menssagem = 'Sem Lançamento situacao' 
 							return res.json(objetoDeRetorno)
 						}
 
 						objetoDeRetorno.ok = true
 						objetoDeRetorno.resultado = {
-							lancamentoSituacao
+							lancamento,
+							lancamentoSituacao,
+							lancamentoSituacaoNovo,
 						}
 
 						return res.json(objetoDeRetorno)
