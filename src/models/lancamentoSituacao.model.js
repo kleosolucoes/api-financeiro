@@ -8,6 +8,7 @@ let schema = new Schema({
 	hora_inativacao: {type: String, required: false},
 	lancamento_id: {type: String, required: true},
 	situacao_id: {type: String, required: true},
+	usuario_id: {type: String, required: true},
 })
 
 module.exports = mongoose.model('lancamentoSituacao', schema)
