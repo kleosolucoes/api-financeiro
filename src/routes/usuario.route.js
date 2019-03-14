@@ -8,5 +8,7 @@ router.post('/login', controller.login)
 router.get('/todos', verifyJWT, controller.todos)
 router.get('/usuarioTipo', verifyJWT, controller.usuarioTipo)
 router.get('/usuarioSituacao', verifyJWT, controller.usuarioSituacao)
+router.post('/salvar', verifyJWT, controller.salvar)
+router.post('/remover', verifyJWT, controller.remover)
 
 module.exports = router

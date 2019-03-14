@@ -3,9 +3,12 @@ import UsuarioTipo from '../models/usuarioTipo.model'
 import UsuarioSituacao from '../models/usuarioSituacao.model'
 import bcrypt from 'bcrypt-nodejs'
 import { 
-		verifyJWT, 
-		objetoDeRetorno, 
-		gerarToken, 
+	verifyJWT, 
+	objetoDeRetorno, 
+	gerarToken, 
+	pegarDataEHoraAtual,
+	SITUACAO_ATIVO,
+	SITUACAO_INATIVO,
 } from '../constantes'
 
 exports.teste = (req, res) => {
@@ -127,5 +130,126 @@ exports.usuarioSituacao = (req, res) => {
 			elementos,
 		}
 		return res.json(objetoDeRetorno)
+	})
+}
+
+exports.salvar = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	if(!req.body.nome){
+		objetoDeRetorno.menssagem = 'Erro ao salvar usuario - sem dados' 
+		return res.json(objetoDeRetorno)
+	}
+
+	const elemento = {
+		data_criacao: pegarDataEHoraAtual()[0],
+		hora_criacao: pegarDataEHoraAtual()[1],
+		data_inativacao: null,
+		hora_inativacao: null,
+		nome: req.body.nome,
+		email: req.body.email,
+		senha: req.body.senha,
+		usuario_tipo_id: req.body.usuario_tipo_id,
+		empresa_id: req.body.empresa_id,
+	}
+
+	const novoUsuario = new Usuario(elemento)
+
+	novoUsuario.save((err, usuario) => {
+		if(err){
+			objetoDeRetorno.menssagem = 'Erro ao salvar usuario' 
+			return res.json(objetoDeRetorno)
+		}
+		if(usuario === null){
+			objetoDeRetorno.menssagem = 'Sem empresa' 
+			return res.json(objetoDeRetorno)
+		}
+
+		const elementoAssociativo = {
+			data_criacao: pegarDataEHoraAtual()[0],
+			hora_criacao: pegarDataEHoraAtual()[1],
+			data_inativacao: null,
+			hora_inativacao: null,
+			situacao_id: SITUACAO_ATIVO,
+			usuario_id: usuario._id,
+			quem_id: req.body.usuario_id,
+		}
+		const novoUsuarioSituacao = new UsuarioSituacao(elementoAssociativo)
+
+		novoUsuarioSituacao.save((err, usuarioSituacao) => {
+			if(err){
+				objetoDeRetorno.menssagem = 'Erro ao salvar usuario situacao' 
+				return res.json(objetoDeRetorno)
+			}
+			if(usuarioSituacao === null){
+				objetoDeRetorno.menssagem = 'Sem usuario situacao' 
+				return res.json(objetoDeRetorno)
+			}
+
+			objetoDeRetorno.ok = true
+			objetoDeRetorno.resultado = {
+				usuario,
+				usuarioSituacao
+			}
+
+			return res.json(objetoDeRetorno)
+		})
+	})
+}
+
+exports.remover = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	if(!req.body.usuario_id){
+		objetoDeRetorno.menssagem = 'Erro ao alterar usuario - sem dados' 
+		return res.json(objetoDeRetorno)
+	}
+
+	UsuarioSituacao.findOne({_id: req.body.usuario_situacao_id}, (err, usuarioSituacao) => {
+		usuarioSituacao.data_inativacao = pegarDataEHoraAtual()[0]		
+		usuarioSituacao.hora_inativacao = pegarDataEHoraAtual()[1]		
+		usuarioSituacao.save((err, lancamento) => {
+			if(err){
+				objetoDeRetorno.menssagem = 'Erro ao alterar usuario situacao' 
+				return res.json(objetoDeRetorno)
+			}
+			if(usuarioSituacao === null){
+				objetoDeRetorno.menssagem = 'Sem usuario situacao'
+				return res.json(objetoDeRetorno)
+			}
+
+			const elementoAssociativo = {
+				data_criacao: pegarDataEHoraAtual()[0],
+				hora_criacao: pegarDataEHoraAtual()[1],
+				data_inativacao: null,
+				hora_inativacao: null,
+				situacao_id: req.body.situacao_id,
+				usuario_id: req.body.usuario_id,
+				quem_id: req.body.quem_id,
+			}
+			const novoUsuarioSituacao = new UsuarioSituacao(elementoAssociativo)
+
+			novoUsuarioSituacao.save((err, usuarioSituacao) => {
+				if(err){
+					objetoDeRetorno.menssagem = 'Erro ao salvar usuario situacao' 
+					return res.json(objetoDeRetorno)
+				}
+				if(usuarioSituacao === null){
+					objetoDeRetorno.menssagem = 'Sem usuario situacao' 
+					return res.json(objetoDeRetorno)
+				}
+
+				objetoDeRetorno.ok = true
+				objetoDeRetorno.resultado = {
+					usuarioSituacao
+				}
+
+				return res.json(objetoDeRetorno)
+			})
+		})
 	})
 }

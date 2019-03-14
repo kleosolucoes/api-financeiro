@@ -8,6 +8,9 @@ objetoDeRetorno.menssagem = ''
 objetoDeRetorno.resultado = {}
 
 const SEGREDO = '123'
+export const SITUACAO_NAO_RECEBIDO = '5c880d6dfb6fc0720133a13c'
+export const SITUACAO_ATIVO = '5c880d9efb6fc0720133a14e'
+export const SITUACAO_INATIVO = '5c880daefb6fc0720133a156'
 
 export const verifyJWT = (req, res, next) => {
 	let token = req.headers['x-access-token']
@@ -39,4 +42,22 @@ export const gerarToken = (id) => {
 		expiresIn: 60 * 60 * 24 // 24 horas
 	})
 	return token
+}
+
+export function pegarDataEHoraAtual(){
+	let dados = []
+	const dataAtual = new Date()
+	const diaParaDataDeCriacao = dataAtual.getDate().toString().padStart(2, '0')
+	let mesParaDataDeCriacao = dataAtual.getMonth()+1
+	mesParaDataDeCriacao = mesParaDataDeCriacao.toString().padStart(2, '0')
+	const anoParaDataDeCriacao = dataAtual.getFullYear()
+	const dataDeCriacao = diaParaDataDeCriacao + '/' + mesParaDataDeCriacao + '/' + anoParaDataDeCriacao
+	const horaDeCriacao = dataAtual.getHours().toString().padStart(2, '0')
+		+':'+dataAtual.getMinutes().toString().padStart(2, '0')
+		+':'+dataAtual.getSeconds().toString().padStart(2, '0')
+
+	dados.push(dataDeCriacao)                 
+	dados.push(horaDeCriacao)
+
+	return dados                              
 }

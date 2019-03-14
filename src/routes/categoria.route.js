@@ -3,5 +3,6 @@ import controller from '../controllers/categoria.controller'
 
 const router = express.Router()
 router.get('/todos', controller.todos)
+router.post('/salvar', controller.salvar)
 
 module.exports = router
