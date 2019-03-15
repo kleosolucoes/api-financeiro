@@ -13,6 +13,7 @@ let schema = new Schema({
 	categoria_id: {type: String, required: true},
 	usuario_id: {type: String, required: true},
 	empresa_id: {type: String, required: true},
+	descricao: {type: String, required: false},
 })
 
 module.exports = mongoose.model('lancamento', schema)

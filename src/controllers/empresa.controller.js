@@ -20,10 +20,6 @@ exports.todos = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao buscar empresas' 
 			return res.json(objetoDeRetorno)
 		}
-		if(elementos === null){
-			objetoDeRetorno.menssagem = 'Sem empresas' 
-			return res.json(objetoDeRetorno)
-		}
 
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
@@ -41,10 +37,6 @@ exports.empresaTipo = (req, res) => {
 	EmpresaTipo.find({}, (err, elementos) => {
 		if(err){
 			objetoDeRetorno.menssagem = 'Erro ao buscar empresa tipo' 
-			return res.json(objetoDeRetorno)
-		}
-		if(elementos === null){
-			objetoDeRetorno.menssagem = 'Sem empresa tipo' 
 			return res.json(objetoDeRetorno)
 		}
 
@@ -66,10 +58,6 @@ exports.contaFixa = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao buscar conta fixa' 
 			return res.json(objetoDeRetorno)
 		}
-		if(elementos === null){
-			objetoDeRetorno.menssagem = 'Sem conta fixa' 
-			return res.json(objetoDeRetorno)
-		}
 
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
@@ -89,10 +77,6 @@ exports.lancamento = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao buscar lançamentos' 
 			return res.json(objetoDeRetorno)
 		}
-		if(elementos === null){
-			objetoDeRetorno.menssagem = 'Sem Lançamentos' 
-			return res.json(objetoDeRetorno)
-		}
 
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
@@ -110,10 +94,6 @@ exports.lancamentoSituacao = (req, res) => {
 	LancamentoSituacao.find({}, (err, elementos) => {
 		if(err){
 			objetoDeRetorno.menssagem = 'Erro ao buscar lançamento situacao' 
-			return res.json(objetoDeRetorno)
-		}
-		if(elementos === null){
-			objetoDeRetorno.menssagem = 'Sem Lançamento Situacao' 
 			return res.json(objetoDeRetorno)
 		}
 
@@ -159,10 +139,6 @@ exports.lancarUm = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao salvar lançamento' 
 			return res.json(objetoDeRetorno)
 		}
-		if(lancamento === null){
-			objetoDeRetorno.menssagem = 'Sem Lançamento' 
-			return res.json(objetoDeRetorno)
-		}
 
 		const elementoAssociativo = {
 			data_criacao: pegarDataEHoraAtual()[0],
@@ -178,10 +154,6 @@ exports.lancarUm = (req, res) => {
 		novoLancamentoSituacao.save((err, lancamentoSituacao) => {
 			if(err){
 				objetoDeRetorno.menssagem = 'Erro ao salvar lançamento situacao' 
-				return res.json(objetoDeRetorno)
-			}
-			if(lancamentoSituacao === null){
-				objetoDeRetorno.menssagem = 'Sem Lançamento situacao' 
 				return res.json(objetoDeRetorno)
 			}
 
@@ -202,13 +174,8 @@ exports.lancarVarios = (req, res) => {
 	objetoDeRetorno.menssagem = ''
 	objetoDeRetorno.resultado = {}
 
-	if(!req.body.elementos){
-		objetoDeRetorno.menssagem = 'Erro ao salvar varios lançamentos - sem dados' 
-		return res.json(objetoDeRetorno)
-	}
-
 	objetoDeRetorno.resultado.elementos = []
-	req.body.elementos.forEach((item, indice, array) => {
+	req.body.forEach((item, indice, array) => {
 		const diaData = item.dia.toString().padStart(2, '0')
 		const mesData = item.mes.toString().padStart(2, '0')
 		const data = diaData + '/' + mesData + '/' + item.ano
@@ -233,10 +200,6 @@ exports.lancarVarios = (req, res) => {
 				objetoDeRetorno.menssagem = 'Erro ao salvar lançamento' 
 				return res.json(objetoDeRetorno)
 			}
-			if(lancamento === null){
-				objetoDeRetorno.menssagem = 'Sem Lançamento' 
-				return res.json(objetoDeRetorno)
-			}
 
 			const elementoAssociativo = {
 				data_criacao: pegarDataEHoraAtual()[0],
@@ -252,10 +215,6 @@ exports.lancarVarios = (req, res) => {
 			novoLancamentoSituacao.save((err, lancamentoSituacao) => {
 				if(err){
 					objetoDeRetorno.menssagem = 'Erro ao salvar lançamento situacao' 
-					return res.json(objetoDeRetorno)
-				}
-				if(lancamentoSituacao === null){
-					objetoDeRetorno.menssagem = 'Sem Lançamento situacao' 
 					return res.json(objetoDeRetorno)
 				}
 
@@ -291,21 +250,13 @@ exports.alterarLancamento = (req, res) => {
 				objetoDeRetorno.menssagem = 'Erro ao salvar lançamento' 
 				return res.json(objetoDeRetorno)
 			}
-			if(lancamento === null){
-				objetoDeRetorno.menssagem = 'Sem Lançamento' 
-				return res.json(objetoDeRetorno)
-			}
 
 			LancamentoSituacao.findOne({_id: req.body.lancamento_situacao_id}, (err, lancamentoSituacao) => {
 				lancamentoSituacao.data_inativacao = pegarDataEHoraAtual()[0]		
 				lancamentoSituacao.hora_inativacao = pegarDataEHoraAtual()[1]		
-				lancamentoSituacao.save((err, lancamento) => {
+				lancamentoSituacao.save((err) => {
 					if(err){
 						objetoDeRetorno.menssagem = 'Erro ao alterar lançamento situacao' 
-						return res.json(objetoDeRetorno)
-					}
-					if(lancamento === null){
-						objetoDeRetorno.menssagem = 'Sem Lançamento situacao'
 						return res.json(objetoDeRetorno)
 					}
 
@@ -315,7 +266,7 @@ exports.alterarLancamento = (req, res) => {
 						data_inativacao: null,
 						hora_inativacao: null,
 						situacao_id: req.body.situacao_id,
-						lancamento_id: lancamento._id,
+						lancamento_id: req.body.lancamento_id,
 						usuario_id: req.body.usuario_id,
 					}
 					const novoLancamentoSituacao = new LancamentoSituacao(elementoAssociativo)
@@ -323,10 +274,6 @@ exports.alterarLancamento = (req, res) => {
 					novoLancamentoSituacao.save((err, lancamentoSituacaoNovo) => {
 						if(err){
 							objetoDeRetorno.menssagem = 'Erro ao salvar lançamento situacao' 
-							return res.json(objetoDeRetorno)
-						}
-						if(lancamentoSituacaoNovo === null){
-							objetoDeRetorno.menssagem = 'Sem Lançamento situacao' 
 							return res.json(objetoDeRetorno)
 						}
 
@@ -372,10 +319,6 @@ exports.salvar = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao salvar empresa' 
 			return res.json(objetoDeRetorno)
 		}
-		if(empresa === null){
-			objetoDeRetorno.menssagem = 'Sem empresa' 
-			return res.json(objetoDeRetorno)
-		}
 
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
@@ -415,10 +358,6 @@ exports.salvarContaFixa = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao salvar conta fixa' 
 			return res.json(objetoDeRetorno)
 		}
-		if(contaFixa === null){
-			objetoDeRetorno.menssagem = 'Sem conta fixa' 
-			return res.json(objetoDeRetorno)
-		}
 
 		objetoDeRetorno.ok = true
 		objetoDeRetorno.resultado = {
@@ -450,6 +389,10 @@ exports.removerContaFixa = (req, res) => {
 			}
 
 			objetoDeRetorno.ok = true
+			objetoDeRetorno.resultado = {
+				contaFixa,
+			}
+	
 			return res.json(objetoDeRetorno)
 		})
 	})

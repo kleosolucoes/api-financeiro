@@ -9,8 +9,6 @@ objetoDeRetorno.resultado = {}
 
 const SEGREDO = '123'
 export const SITUACAO_NAO_RECEBIDO = '5c880d6dfb6fc0720133a13c'
-export const SITUACAO_ATIVO = '5c880d9efb6fc0720133a14e'
-export const SITUACAO_INATIVO = '5c880daefb6fc0720133a156'
 
 export const verifyJWT = (req, res, next) => {
 	let token = req.headers['x-access-token']

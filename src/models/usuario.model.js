@@ -11,6 +11,7 @@ let schema = new Schema({
 	senha: {type: String, required: true, max: 150},
 	usuario_tipo_id: {type: String, required: true},
 	empresa_id: {type: String, required: true},
+	quem_inativou_id: {type: String, required: false},
 })
 
 module.exports = mongoose.model('usuario', schema)
