@@ -243,6 +243,7 @@ exports.alterarLancamento = (req, res) => {
 	}
 
 	Lancamento.findOne({_id: req.body.lancamento_id}, (err, lancamento) => {
+		const mensagemExtra = ` <p>Valor Anterior: ${lancamento.valor}, Taxa Anterior: ${lancamento.taxa}</p> <p>Valor Novo: ${req.body.valor}, Taxa Nova: ${req.body.taxa}</p> ` 
 		lancamento.valor = req.body.valor
 		lancamento.taxa = req.body.taxa
 		lancamento.save((err, lancamento) => {
@@ -254,6 +255,7 @@ exports.alterarLancamento = (req, res) => {
 			LancamentoSituacao.findOne({_id: req.body.lancamento_situacao_id}, (err, lancamentoSituacao) => {
 				lancamentoSituacao.data_inativacao = pegarDataEHoraAtual()[0]		
 				lancamentoSituacao.hora_inativacao = pegarDataEHoraAtual()[1]		
+				lancamentoSituacao.descricao = mensagemExtra
 				lancamentoSituacao.save((err) => {
 					if(err){
 						objetoDeRetorno.menssagem = 'Erro ao alterar lançamento situacao' 
