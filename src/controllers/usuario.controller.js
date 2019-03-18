@@ -107,32 +107,40 @@ exports.salvar = (req, res) => {
 		return res.json(objetoDeRetorno)
 	}
 
-	const elemento = {
-		data_criacao: pegarDataEHoraAtual()[0],
-		hora_criacao: pegarDataEHoraAtual()[1],
-		data_inativacao: null,
-		hora_inativacao: null,
-		nome: req.body.nome,
-		email: req.body.email,
-		senha: req.body.senha,
-		usuario_tipo_id: req.body.usuario_tipo_id,
-		empresa_id: req.body.empresa_id,
-	}
-
-	const novoUsuario = new Usuario(elemento)
-
-	novoUsuario.save((err, usuario) => {
+	const passwordString = 123
+	bcrypt.hash(passwordString, null, null, (err, hashPassword) => {
 		if(err){
-			objetoDeRetorno.menssagem = 'Erro ao salvar usuario' 
+			objetoDeRetorno.menssagem = 'Erro ao transformar senha' 
 			return res.json(objetoDeRetorno)
 		}
 
-		objetoDeRetorno.ok = true
-		objetoDeRetorno.resultado = {
-			usuario,
+		const elemento = {
+			data_criacao: pegarDataEHoraAtual()[0],
+			hora_criacao: pegarDataEHoraAtual()[1],
+			data_inativacao: null,
+			hora_inativacao: null,
+			nome: req.body.nome,
+			email: req.body.email,
+			senha: req.body.senha,
+			usuario_tipo_id: req.body.usuario_tipo_id,
+			empresa_id: req.body.empresa_id,
 		}
 
-		return res.json(objetoDeRetorno)
+		const novoUsuario = new Usuario(elemento)
+
+		novoUsuario.save((err, usuario) => {
+			if(err){
+				objetoDeRetorno.menssagem = 'Erro ao salvar usuario' 
+				return res.json(objetoDeRetorno)
+			}
+
+			objetoDeRetorno.ok = true
+			objetoDeRetorno.resultado = {
+				usuario,
+			}
+
+			return res.json(objetoDeRetorno)
+		})
 	})
 }
 
