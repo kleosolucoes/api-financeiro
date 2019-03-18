@@ -121,7 +121,7 @@ exports.salvar = (req, res) => {
 			hora_inativacao: null,
 			nome: req.body.nome,
 			email: req.body.email,
-			senha: req.body.senha,
+			senha: hashPassword,
 			usuario_tipo_id: req.body.usuario_tipo_id,
 			empresa_id: req.body.empresa_id,
 		}
