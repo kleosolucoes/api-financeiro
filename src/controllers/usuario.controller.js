@@ -37,6 +37,11 @@ exports.login = (req, res) => {
 			objetoDeRetorno.menssagem = 'Erro ao buscar usuario' 
 			return res.json(objetoDeRetorno)
 		}
+		if(elemento === null){
+			objetoDeRetorno.menssagem = 'Usuario nao encontrado' 
+			return res.json(objetoDeRetorno)
+		}
+
 		bcrypt.compare(senha, elemento.senha, (err, result) => {
 			if(err){
 				objetoDeRetorno.menssagem = 'Erro ao comparar senha'
