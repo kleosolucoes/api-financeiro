@@ -399,3 +399,44 @@ exports.removerContaFixa = (req, res) => {
 		})
 	})
 }
+
+exports.removerLancamento = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	if(!req.body.lancamento_id){
+		objetoDeRetorno.menssagem = 'Erro ao remover lançamento - sem dados' 
+		return res.json(objetoDeRetorno)
+	}
+
+	Lancamento.findOne({_id: req.body.lancamento_id}, (err, lancamento) => {
+		lancamento.data_inativacao = pegarDataEHoraAtual()[0]		
+		lancamento.hora_inativacao = pegarDataEHoraAtual()[1]		
+		lancamento.save((err, lancamento) => {
+			if(err){
+				objetoDeRetorno.menssagem = 'Erro ao salvar lançamento' 
+				return res.json(objetoDeRetorno)
+			}
+
+			LancamentoSituacao.findOne({_id: req.body.lancamento_situacao_id}, (err, lancamentoSituacao) => {
+				lancamentoSituacao.data_inativacao = pegarDataEHoraAtual()[0]		
+				lancamentoSituacao.hora_inativacao = pegarDataEHoraAtual()[1]		
+				lancamentoSituacao.save((err) => {
+					if(err){
+						objetoDeRetorno.menssagem = 'Erro ao alterar lançamento situacao' 
+						return res.json(objetoDeRetorno)
+					}
+
+					objetoDeRetorno.ok = true
+					objetoDeRetorno.resultado = {
+						lancamento,
+						lancamentoSituacao,
+					}
+
+					return res.json(objetoDeRetorno)
+				})
+			})
+		})
+	})
+}
