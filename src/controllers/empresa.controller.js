@@ -255,7 +255,6 @@ exports.alterarLancamento = (req, res) => {
 			LancamentoSituacao.findOne({_id: req.body.lancamento_situacao_id}, (err, lancamentoSituacao) => {
 				lancamentoSituacao.data_inativacao = pegarDataEHoraAtual()[0]		
 				lancamentoSituacao.hora_inativacao = pegarDataEHoraAtual()[1]		
-				lancamentoSituacao.descricao = mensagemExtra
 				lancamentoSituacao.save((err) => {
 					if(err){
 						objetoDeRetorno.menssagem = 'Erro ao alterar lançamento situacao' 
@@ -270,6 +269,7 @@ exports.alterarLancamento = (req, res) => {
 						situacao_id: req.body.situacao_id,
 						lancamento_id: req.body.lancamento_id,
 						usuario_id: req.body.usuario_id,
+						extra: mensagemExtra,
 					}
 					const novoLancamentoSituacao = new LancamentoSituacao(elementoAssociativo)
 
