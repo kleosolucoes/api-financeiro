@@ -219,10 +219,10 @@ exports.lancarVarios = (req, res) => {
 				}
 
 				objetoDeRetorno.ok = true
-				objetoDeRetorno.resultado.elementos.push({
-					lancamento,
-					lancamentoSituacao
-				})
+				//objetoDeRetorno.resultado.elementos.push({
+				//	lancamento,
+				//	lancamentoSituacao
+				//})
 
 				if(indice === array.length-1){ 
 					return res.json(objetoDeRetorno)
