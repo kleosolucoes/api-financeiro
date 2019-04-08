@@ -31,7 +31,7 @@ app.use('/', indexRoute)
 app.use('/usuario', usuarioRoute)
 app.use('/situacao', verifyJWT, situacaoRoute)
 app.use('/categoria', verifyJWT, categoriaRoute)
-app.use('/empresa', verifyJWT, empresaRoute)
+app.use('/empresa', empresaRoute)
 const port = process.env.PORT || 8080
 app.listen(port, () => {
 	console.log('Server is up and running on port number ' + port);

@@ -5,9 +5,11 @@ import Usuario from '../models/usuario.model'
 import Lancamento from '../models/lancamento.model'
 import LancamentoSituacao from '../models/lancamentoSituacao.model'
 import { 
-		objetoDeRetorno, 
-		pegarDataEHoraAtual,
-		SITUACAO_NAO_RECEBIDO,
+	objetoDeRetorno, 
+	pegarDataEHoraAtual,
+	SITUACAO_NAO_RECEBIDO,
+	USUARIO_SISTEMA,
+	EMPRESA_ADMINISTRACAO,
 } from '../constantes'
 
 exports.todos = (req, res) => {
@@ -438,5 +440,58 @@ exports.removerLancamento = (req, res) => {
 				})
 			})
 		})
+	})
+}
+
+exports.gerarLancamentos = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	ContaFixa.find({data_inativacao: null}, (err, contasFixas) => {
+		console.log(contasFixas)
+		contasFixas.forEach(contaFixa => {
+			const elemento = {
+				data_criacao: pegarDataEHoraAtual()[0],
+				hora_criacao: pegarDataEHoraAtual()[1],
+				data_inativacao: null,
+				hora_inativacao: null,
+				categoria_id: contaFixa.categoria_id,
+				valor: 0,
+				taxa: 0,
+				descricao: 'Conta Fixa',
+				usuario_id: USUARIO_SISTEMA,
+				empresa_id: contaFixa.empresa_id,
+				data: pegarDataEHoraAtual()[0],
+			}
+			const novoLancamento = new Lancamento(elemento)
+
+			novoLancamento.save((err, lancamento) => {
+				if(err){
+					objetoDeRetorno.menssagem = 'Erro ao salvar lançamento' 
+					return res.json(objetoDeRetorno)
+				}
+
+				const elementoAssociativo = {
+					data_criacao: pegarDataEHoraAtual()[0],
+					hora_criacao: pegarDataEHoraAtual()[1],
+					data_inativacao: null,
+					hora_inativacao: null,
+					situacao_id: SITUACAO_NAO_RECEBIDO,
+					lancamento_id: lancamento._id,
+					usuario_id: USUARIO_SISTEMA,
+				}
+				const novoLancamentoSituacao = new LancamentoSituacao(elementoAssociativo)
+
+				novoLancamentoSituacao.save((err, lancamentoSituacao) => {
+					if(err){
+						objetoDeRetorno.menssagem = 'Erro ao salvar lançamento situacao' 
+						return res.json(objetoDeRetorno)
+					}
+				})
+			})
+		})
+		objetoDeRetorno.ok = true
+		return res.json(objetoDeRetorno)
 	})
 }
