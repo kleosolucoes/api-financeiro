@@ -7,8 +7,6 @@ let schema = new Schema({
 	data_inativacao: {type: String, required: false},
 	hora_inativacao: {type: String, required: false},
 	nome: {type: String, required: true, max: 150},
-	credito_debito: {type: String, required: true,},
-	categoria_tipo_id: {type: String, required: false},
 })
 
-module.exports = mongoose.model('categoria', schema)
+module.exports = mongoose.model('categoriaTipo', schema)
