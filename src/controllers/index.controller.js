@@ -1,4 +1,6 @@
-import { objetoDeRetorno } from  '../constantes'
+import { 
+	objetoDeRetorno,
+} from  '../constantes'
 
 exports.index = (req, res, next) => {
 	objetoDeRetorno.ok = true 

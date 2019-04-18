@@ -7,7 +7,11 @@ objetoDeRetorno.ok = false
 objetoDeRetorno.menssagem = ''
 objetoDeRetorno.resultado = {}
 
-const SEGREDO = '123'
+const SEGREDO = 'rjXePKbm7AA9kcgOlVw6cfJnjt_cnWFIOqUz36rUKDk'
+
+export const publicKey = "BLHCbFqkY_001v2441pITZWI3mcBskw_gVuLqxzI-FEw-INIemr8u2bJpQmPeSRi1pJ7kpbTJe9VfddJNQ_ZmQk"
+export const privateKey = "_kXi4IMm-Skq3vta0yevTl4XgNB80IC9_hIEVlBEVTQ"
+
 export const SITUACAO_NAO_RECEBIDO = '5c880d6dfb6fc0720133a13c'
 export const USUARIO_SISTEMA = '5c87ff9bfb6fc07201339410'
 

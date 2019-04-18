@@ -10,6 +10,7 @@ import usuarioRoute from './routes/usuario.route'
 import situacaoRoute from './routes/situacao.route'
 import categoriaRoute from './routes/categoria.route'
 import empresaRoute from './routes/empresa.route'
+import pushRoute from './routes/push.route'
 import mongoose from 'mongoose'
 import { verifyJWT } from './constantes'
 
@@ -32,6 +33,7 @@ app.use('/usuario', usuarioRoute)
 app.use('/situacao', verifyJWT, situacaoRoute)
 app.use('/categoria', verifyJWT, categoriaRoute)
 app.use('/empresa', empresaRoute)
+app.use('/push', pushRoute)
 const port = process.env.PORT || 8080
 app.listen(port, () => {
 	console.log('Server is up and running on port number ' + port);
