@@ -9,5 +9,7 @@ router.get('/todos', verifyJWT, controller.todos)
 router.get('/usuarioTipo', verifyJWT, controller.usuarioTipo)
 router.post('/salvar', verifyJWT, controller.salvar)
 router.post('/remover', verifyJWT, controller.remover)
+router.post('/salvarToken', verifyJWT, controller.salvarToken)
+router.get('/notificar', controller.notificar)
 
 module.exports = router

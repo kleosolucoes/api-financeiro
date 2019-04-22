@@ -1,6 +1,7 @@
 import Usuario from '../models/usuario.model'
 import UsuarioTipo from '../models/usuarioTipo.model'
 import bcrypt from 'bcrypt-nodejs'
+import fetch from 'node-fetch'
 import { 
 	verifyJWT, 
 	objetoDeRetorno, 
@@ -8,6 +9,7 @@ import {
 	pegarDataEHoraAtual,
 	SITUACAO_ATIVO,
 	SITUACAO_INATIVO,
+	FIRE_BASE,
 } from '../constantes'
 
 exports.teste = (req, res) => {
@@ -112,7 +114,7 @@ exports.salvar = (req, res) => {
 		return res.json(objetoDeRetorno)
 	}
 
-	const passwordString = 123
+	const passwordString = req.body.senha
 	bcrypt.hash(passwordString, null, null, (err, hashPassword) => {
 		if(err){
 			objetoDeRetorno.menssagem = 'Erro ao transformar senha' 
@@ -176,5 +178,65 @@ exports.remover = (req, res) => {
 
 			return res.json(objetoDeRetorno)
 		})
+	})
+}
+
+exports.salvarToken = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	if(!req.body.token){
+		objetoDeRetorno.menssagem = 'Erro ao salvar usuario token - sem dados' 
+		return res.json(objetoDeRetorno)
+	}
+
+	Usuario.findOne({_id: req.body.usuario_id}, (err, usuario) => {
+		usuario.token = req.body.token 
+		usuario.save((err) => {
+			if(err){
+				objetoDeRetorno.menssagem = 'Erro ao salvar token usuario' 
+				return res.json(objetoDeRetorno)
+			}
+
+			objetoDeRetorno.ok = true
+			objetoDeRetorno.resultado = {
+				usuario
+			}
+
+			return res.json(objetoDeRetorno)
+		})
+	})
+}
+
+exports.notificar = (req, res) => {
+	objetoDeRetorno.ok = false 
+	objetoDeRetorno.menssagem = ''
+	objetoDeRetorno.resultado = {}
+
+	Usuario.find({}, (err, usuario) => {
+		const url = 'https://fcm.googleapis.com/fcm/send'
+		const headers = {
+			'Content-Type': 'application/json',
+			'Authorization': FIRE_BASE,
+		}
+		const dados = 
+			{
+				"notification": {
+					"title": "Firebase",
+					"body": "Firebase is awesome",
+					"click_action": "http://localhost:3000/",
+					"icon": "http://url-to-an-icon/icon.png"
+				},
+				"to": usuario.token
+			}
+		fetch(url,
+			{
+				headers,
+				method: 'POST',
+				body: JSON.stringify(dados),
+			})
+			.then(resultado => resultado.json())
+			.then(json => json)
 	})
 }

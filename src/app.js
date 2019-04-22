@@ -10,13 +10,13 @@ import usuarioRoute from './routes/usuario.route'
 import situacaoRoute from './routes/situacao.route'
 import categoriaRoute from './routes/categoria.route'
 import empresaRoute from './routes/empresa.route'
-import pushRoute from './routes/push.route'
 import mongoose from 'mongoose'
 import { verifyJWT } from './constantes'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express()
-const dev_db_url = 'mongodb://financeiro:QokmeXrmTNHYzey2@ds047950.mlab.com:47950/api-financeiro'
-let mongoDB = process.env.MONGODB_URI || dev_db_url
+let mongoDB = process.env.MONGODB_URI
 mongoose.connect(mongoDB, { useNewUrlParser: true})
 mongoose.Promise = global.Promise
 let db = mongoose.connection
@@ -33,7 +33,6 @@ app.use('/usuario', usuarioRoute)
 app.use('/situacao', verifyJWT, situacaoRoute)
 app.use('/categoria', verifyJWT, categoriaRoute)
 app.use('/empresa', empresaRoute)
-app.use('/push', pushRoute)
 const port = process.env.PORT || 8080
 app.listen(port, () => {
 	console.log('Server is up and running on port number ' + port);
