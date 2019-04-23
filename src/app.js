@@ -12,6 +12,8 @@ import categoriaRoute from './routes/categoria.route'
 import empresaRoute from './routes/empresa.route'
 import mongoose from 'mongoose'
 import { verifyJWT } from './constantes'
+import https from 'https'
+import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -23,6 +25,11 @@ let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 app.use(cors())
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(bodyParser.json())
@@ -34,6 +41,11 @@ app.use('/situacao', verifyJWT, situacaoRoute)
 app.use('/categoria', verifyJWT, categoriaRoute)
 app.use('/empresa', empresaRoute)
 const port = process.env.PORT || 8080
-app.listen(port, () => {
-	console.log('Server is up and running on port number ' + port);
+
+const server  = https.createServer({
+key: fs.readFileSync('server.key'),
+cert: fs.readFileSync('server.cert')
+}, app)
+server.listen(port, () => {
+	console.log('Server https: ' + port);
 })
