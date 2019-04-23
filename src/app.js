@@ -12,8 +12,6 @@ import categoriaRoute from './routes/categoria.route'
 import empresaRoute from './routes/empresa.route'
 import mongoose from 'mongoose'
 import { verifyJWT } from './constantes'
-import https from 'https'
-import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -41,11 +39,6 @@ app.use('/situacao', verifyJWT, situacaoRoute)
 app.use('/categoria', verifyJWT, categoriaRoute)
 app.use('/empresa', empresaRoute)
 const port = process.env.PORT || 8080
-
-const server  = https.createServer({
-key: fs.readFileSync('server.key'),
-cert: fs.readFileSync('server.cert')
-}, app)
-server.listen(port, () => {
-	console.log('Server https: ' + port);
+app.listen(port, () => {
+	console.log('Server: ' + port);
 })
