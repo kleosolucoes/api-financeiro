@@ -23,6 +23,11 @@ let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 app.use(cors())
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(bodyParser.json())
@@ -35,5 +40,5 @@ app.use('/categoria', verifyJWT, categoriaRoute)
 app.use('/empresa', empresaRoute)
 const port = process.env.PORT || 8080
 app.listen(port, () => {
-	console.log('Server is up and running on port number ' + port);
+	console.log('Server: ' + port);
 })
