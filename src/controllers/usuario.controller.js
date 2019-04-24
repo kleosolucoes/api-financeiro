@@ -34,7 +34,7 @@ exports.login = (req, res) => {
 	objetoDeRetorno.resultado = {}
 
 	const senha = req.body.senha + ''
-	Usuario.findOne({email: req.body.email}, (err, elemento) => {
+	Usuario.findOne({email: req.body.email, data_inativacao: null}, (err, elemento) => {
 		if(err){
 			objetoDeRetorno.menssagem = 'Erro ao buscar usuario' 
 			return res.json(objetoDeRetorno)
